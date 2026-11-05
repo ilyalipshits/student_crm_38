@@ -53,5 +53,5 @@ createRoot(document.getElementById('root')).render(
 +------------------------------------------------------+
 |             Student CRM — учебный проект             |
 +------------------------------------------------------+
-
+https://github.com/ilyalipshits/student_crm_38.git
  */
