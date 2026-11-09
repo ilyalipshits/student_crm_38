@@ -1,14 +1,26 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { StrictMode } from "react";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+import { createRoot } from "react-dom/client";
 
+import App from "./App.jsx";
+
+import "./index.css";
+
+
+// Находим корневой HTML-элемент.
+const rootElement = document.getElementById("root");
+
+
+// Создаём React-корень.
+const root = createRoot(rootElement);
+
+
+// Отображаем приложение.
+root.render(
+    <StrictMode>
+        <App />
+    </StrictMode>
+);
 /*
 +------------------------------------------------------+
 |                     STUDENT CRM                      |

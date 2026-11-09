@@ -1,10 +1,15 @@
 function Header() {
 
     return (
-        <header>
-            <h1>STUDENT CRM</h1>
+        <header className="header">
 
-            <p>Система управления студентами</p>
+            <h1>
+                Student CRM
+            </h1>
+
+            <p>
+                Система управления студентами
+            </p>
 
         </header>
     );
