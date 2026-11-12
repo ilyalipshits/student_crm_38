@@ -1,16 +1,310 @@
-# React + Vite
+# HW_38_TEXT
+https://github.com/ilyalipshits/student_crm_38.git
+## Что следует реализовать?
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+У нас есть массив студентов. Сохраняем эти записи по каждому студенту и их ID, добавляем поле isActive. Для проверки несовершеннолетия вводим  студента с id 5, возрастом 17. Имя другого человека не присваиваем уже занятому ID.
 
-Currently, two official plugins are available:
+В итоговой версии пять студентов: четыре активных и один на паузе. Все данные остаются локальными и статическими: backend, формы и состояние в этом проекте не добавляются.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Теперь надо реализовать в проекте сделанном на уроке компоненты Реакта, для следующиго функционала:
 
-## React Compiler
+1. Отдельный компонент списка студентов.
+2. Передачу данных через props.
+3. Компонент - Отдельные карточки студентов.
+4. Компонент - Статус обучения.
+5. Условное оформление.
+6. Сообщение при пустом списке.
+7. Количество студентов, вычисляемое из длины массива.
+8. Компонент - Footer
+9. Перепешите ReadMe под нашу задачу.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+###  CSS файлы писать не обязательно (***adv - по желанию***) - их мы заполним вместе на следующем уроке.
 
-## Expanding the Oxlint configuration
+# ===============================
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Итоговый интерфейс:
+
+```text
++------------------------------------------------------+
+|                     STUDENT CRM                      |
+|            Система управления студентами             |
++------------------------------------------------------+
+|                                                      |
+|                  Наши студенты                       |
+|                                                      |
+|              Всего студентов: 5                      |
+|                                                      |
+|  +------------------------------------------------+  |
+|  | Anna Cohen                          [Активен]  |  |
+|  | Возраст: 25                                   |  |
+|  | Группа: React Basics                          |  |
+|  +------------------------------------------------+  |
+|                                                      |
+|  +------------------------------------------------+  |
+|  | David Levi                          [Активен]  |  |
+|  | Возраст: 28                                   |  |
+|  | Группа: Python Basics                         |  |
+|  +------------------------------------------------+  |
+|                                                      |
+|  +------------------------------------------------+  |
+|  | Sarah Miller                         [Пауза]   |  |
+|  | Возраст: 23                                   |  |
+|  | Группа: JavaScript                            |  |
+|  +------------------------------------------------+  |
+|                                                      |
+|  +------------------------------------------------+  |
+|  | Michael Brown                       [Активен]  |  |
+|  | Возраст: 30                                   |  |
+|  | Группа: React Basics                          |  |
+|  +------------------------------------------------+  |
+|                                                      |
+|  +------------------------------------------------+  |
+|  | Daniel Green                        [Активен]  |  |
+|  | Возраст: 17                                   |  |
+|  | Группа: React Basics                          |  |
+|  | Несовершеннолетний студент                    |  |
+|  +------------------------------------------------+  |
+|                                                      |
++------------------------------------------------------+
+|             Student CRM — учебный проект             |
++------------------------------------------------------+
+```
+
+Структура итогового проекта
+
+```text
+student-crm/
+|
++-- public/
+|
++-- src/
+|   |
+|   +-- components/
+|   |   |
+|   |   +-- Header.jsx
+|   |   +-- StudentList.jsx
+|   |   +-- StudentCard.jsx
+|   |   +-- StatusBadge.jsx
+|   |   +-- Footer.jsx
+|   |
+|   +-- data/
+|   |   +-- students.js
+|   |
+|   +-- App.jsx
+|   +-- App.css
+|   +-- index.css
+|   +-- main.jsx
+|
++-- index.html
++-- package.json
+```
+
+Папка `data` будет хранить учебные данные.
+
+Папка components — React-компоненты.
+
+Почему мы вынесли данные в отдельный файл?
+
+Раньше данные находились прямо внутри компонента.
+
+Теперь мы отделяем данные от отображения.
+
+Это делает структуру приложения понятнее.
+
+```text
+students.js
+    |
+    | данные
+    v
+App.jsx
+    |
+    | props
+    v
+StudentList
+    |
+    | props
+    v
+StudentCard
+```
+
+Компонент `StudentCard` передаёт часть своих данных дочернему компоненту `StatusBadge`.
+
+### Схема
+
+```text
+StudentCard
+    |
+    | student
+    |
+    +---- name
+    |
+    +---- age
+    |
+    +---- group
+    |
+    +---- isActive
+              |
+              v
+          StatusBadge
+              |
+              v
+       "Активен" / "Пауза"
+```
+
+
+### Схема
+
+```text
+StudentList
+     |
+     v
+Массив students
+     |
+     v
+Проверка length
+     |
+     +---- 0 ----> "Список пуст"
+     |
+     +---- > 0
+              |
+              v
+             map()
+              |
+       +------+------+
+       |      |      |
+       v      v      v
+      Card   Card   Card
+```
+
+
+Как передаются данные?
+
+```text
+students.js
+    |
+    | export const students
+    |
+    v
+App.jsx
+    |
+    | import { students }
+    |
+    v
+<StudentList students={students} />
+    |
+    | props
+    |
+    v
+StudentList
+    |
+    | map()
+    |
+    +---- <StudentCard student={student1} />
+    |
+    +---- <StudentCard student={student2} />
+    |
+    +---- <StudentCard student={student3} />
+    |
+    +---- <StudentCard student={student4} />
+    |
+    +---- <StudentCard student={student5} />
+
+Каждая StudentCard
+    |
+    +---- StatusBadge
+```
+
+## Это одна из важнейших схем сегодняшнего занятия.
+
+# Проверка знаний
+
+Вопросы для студентов
+
+1. Что такое props?
+2. Для чего нужны props?
+3. Чем props похожи на аргументы функции?
+4. Как передать строку?
+5. Как передать число?
+6. Как передать boolean?
+7. Как передать объект?
+8. Как получить props внутри компонента?
+9. Что такое деструктуризация?
+10. Можно ли изменять props?
+11. Что такое children?
+12. Для чего используется map()?
+13. Что возвращает map()?
+14. Для чего нужен key?
+15. Почему нежелательно использовать индекс массива как key?
+16. Что такое условный рендеринг?
+17. Как использовать if в компоненте?
+18. Как работает тернарный оператор?
+19. Как работает && в JSX?
+20. Как показать сообщение при пустом массиве?
+
+Мини-тест
+
+### Вопрос 1. Что такое props?
+
+- A. Способ хранения глобального состояния.
+
+- B. Данные, передаваемые компоненту.
+
+- C. CSS-стили.
+
+Правильный ответ: B.
+
+### Вопрос 2. Как передать число?
+
+A.
+
+```jsx
+<StudentCard age="25" />
+```
+
+B.
+
+```jsx
+<StudentCard age={25} />
+```
+
+Правильный ответ: B.
+
+### Вопрос 3. Что делает map()?
+
+- A. Изменяет DOM напрямую.
+
+- B. Создаёт новый массив на основе исходного.
+
+- C. Удаляет все элементы массива.
+
+Правильный ответ: B.
+
+### Вопрос 4. Для чего нужен key?
+
+- A. Для CSS.
+
+- B. Для идентификации элементов списка React.
+
+- C. Для передачи данных серверу.
+
+Правильный ответ: B.
+
+### Вопрос 5. Как показать элемент только при true?
+
+A.
+
+```jsx
+<>
+    {isActive && <p>Активен</p>}
+</>
+```
+
+B.
+
+```jsx
+<>
+    {isActive <p>Активен</p>}
+</>
+```
+
+Правильный ответ: A.
